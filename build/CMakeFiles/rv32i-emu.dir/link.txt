@@ -1,0 +1,1 @@
+/usr/bin/g++ -g "CMakeFiles/rv32i-emu.dir/main.cpp.o" "CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o" "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o" -o rv32i-emu 

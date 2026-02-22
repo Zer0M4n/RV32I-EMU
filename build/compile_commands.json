@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/developer/projects/RV32I-EMU/build",
+  "command": "/usr/bin/g++  -I/home/developer/projects/RV32I-EMU/core/CPU -I/home/developer/projects/RV32I-EMU/core/MMU -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/main.cpp.o -c /home/developer/projects/RV32I-EMU/main.cpp",
+  "file": "/home/developer/projects/RV32I-EMU/main.cpp"
+},
+{
+  "directory": "/home/developer/projects/RV32I-EMU/build",
+  "command": "/usr/bin/g++  -I/home/developer/projects/RV32I-EMU/core/CPU -I/home/developer/projects/RV32I-EMU/core/MMU -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o -c /home/developer/projects/RV32I-EMU/core/CPU/CPU.cpp",
+  "file": "/home/developer/projects/RV32I-EMU/core/CPU/CPU.cpp"
+},
+{
+  "directory": "/home/developer/projects/RV32I-EMU/build",
+  "command": "/usr/bin/g++  -I/home/developer/projects/RV32I-EMU/core/CPU -I/home/developer/projects/RV32I-EMU/core/MMU -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o -c /home/developer/projects/RV32I-EMU/core/MMU/MMU.cpp",
+  "file": "/home/developer/projects/RV32I-EMU/core/MMU/MMU.cpp"
+}
+]
