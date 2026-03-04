@@ -12,7 +12,7 @@ private:
     MMU& memory;
     std::array<uint32_t, 32> regs; // 🗄️ Ajustado a 32 para que los índices 0-31 coincidan con x0-x31
     
-    using Instruction = int(CPU::*)(uint32_t);
+    using Instruction = int(CPU::*)(uint8_t);
     std::array<Instruction,40> opcode_pointer; //pointer fuction the cpu
     
     static uint8_t  opcode(uint32_t i) { return i & 0x7F; }
