@@ -1,1 +1,0 @@
-/usr/bin/g++ -g CMakeFiles/emulator.dir/main.cpp.o CMakeFiles/emulator.dir/core/CPU/cpu.cpp.o -o emulator 

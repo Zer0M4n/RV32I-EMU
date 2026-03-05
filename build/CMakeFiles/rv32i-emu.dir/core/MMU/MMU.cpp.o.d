@@ -1,7 +1,7 @@
-CMakeFiles/emulator.dir/core/CPU/cpu.cpp.o: \
- /home/developer/projects/RV32I-EMU/core/CPU/cpu.cpp \
+CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o: \
+ /home/developer/projects/RV32I-EMU/core/MMU/MMU.cpp \
  /usr/include/stdc-predef.h \
- /home/developer/projects/RV32I-EMU/core/CPU/cpu.h \
+ /home/developer/projects/RV32I-EMU/core/MMU/MMU.h \
  /usr/include/c++/12/iostream \
  /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h \
@@ -149,5 +149,8 @@ CMakeFiles/emulator.dir/core/CPU/cpu.cpp.o: \
  /usr/include/c++/12/bits/locale_facets.tcc \
  /usr/include/c++/12/bits/basic_ios.tcc \
  /usr/include/c++/12/bits/ostream.tcc /usr/include/c++/12/istream \
- /usr/include/c++/12/bits/istream.tcc /usr/include/c++/12/array \
- /usr/include/c++/12/compare
+ /usr/include/c++/12/bits/istream.tcc /usr/include/c++/12/vector \
+ /usr/include/c++/12/bits/stl_uninitialized.h \
+ /usr/include/c++/12/bits/stl_vector.h \
+ /usr/include/c++/12/bits/stl_bvector.h \
+ /usr/include/c++/12/bits/vector.tcc
