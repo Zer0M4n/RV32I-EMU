@@ -1,16 +1,16 @@
 # RV32I-EMU
 
-Emulador de la arquitectura RISC-V (RV32I) escrito en C++ desde cero, con fines de aprendizaje personal. El objetivo es entender cómo funciona una CPU a nivel de ciclo de instrucción: fetch, decode y execute.
+A RISC-V (RV32I) emulator written in C++ from scratch, built for personal learning. The goal is to understand how a CPU works at the instruction cycle level: fetch, decode, and execute.
 
 ---
 
-## Estado actual
+## Current Status
 
-El emulador es capaz de cargar binarios ELF extraídos como `.bin`, ejecutarlos en memoria y reportar si el test pasó o falló usando la convención de `riscv-tests`.
+The emulator can load ELF binaries extracted as `.bin` files, execute them in memory, and report whether a test passed or failed using the `riscv-tests` convention.
 
-### Instrucciones implementadas
+### Implemented Instructions
 
-| Grupo | Instrucciones |
+| Group | Instructions |
 |---|---|
 | **LUI** | `LUI` |
 | **AUIPC** | `AUIPC` |
@@ -23,41 +23,41 @@ El emulador es capaz de cargar binarios ELF extraídos como `.bin`, ejecutarlos 
 | **SYSTEM** | `ECALL`, `EBREAK` |
 | **MISC-MEM** | `FENCE` (no-op) |
 
-### Tests pasados
+### Passing Tests
 
-| Test | Estado |
+| Test | Status |
 |---|---|
 | `rv32ui-p-simple` | ✅ PASS |
 
 ---
 
-## Estructura del proyecto
+## Project Structure
 
 ```
 RV32I-EMU/
 ├── core/
 │   ├── CPU/
-│   │   ├── CPU.h       # Definición de la CPU
-│   │   └── CPU.cpp     # Implementación del fetch/decode/execute
+│   │   ├── CPU.h       # CPU class definition
+│   │   └── CPU.cpp     # Fetch / decode / execute implementation
 │   └── MMU/
-│       ├── MMU.h       # Definición de la MMU
-│       └── MMU.cpp     # Memoria plana con dirección base configurable
-├── main.cpp            # Entry point: carga el binario y corre el emulador
+│       ├── MMU.h       # MMU class definition
+│       └── MMU.cpp     # Flat memory with configurable base address
+├── main.cpp            # Entry point: loads the binary and runs the emulator
 ├── CMakeLists.txt
-└── *.bin               # Binarios de los tests de riscv-tests
+└── *.bin               # riscv-tests binaries
 ```
 
 ---
 
-## Cómo compilar
+## How to Build
 
-### Requisitos
+### Requirements
 
 - `cmake` >= 3.10
-- `g++` con soporte C++17
-- `riscv64-unknown-elf-gcc` (solo para generar los tests, no para compilar el emulador)
+- `g++` with C++17 support
+- `riscv64-unknown-elf-gcc` (only needed to generate test binaries, not to build the emulator)
 
-### Compilar el emulador
+### Build the emulator
 
 ```bash
 mkdir build && cd build
@@ -65,17 +65,17 @@ cmake ..
 make
 ```
 
-El binario queda en `build/rv32i-emu`.
+The binary will be at `build/rv32i-emu`.
 
-### Ejecutar un test
+### Run a test
 
-Cambia la ruta del binario en `main.cpp` y recompila:
+Change the binary path in `main.cpp` and recompile:
 
 ```cpp
-std::ifstream file("/ruta/a/rv32ui-p-add.bin", std::ios::binary);
+std::ifstream file("/path/to/rv32ui-p-add.bin", std::ios::binary);
 ```
 
-Luego:
+Then:
 
 ```bash
 cd build
@@ -83,16 +83,16 @@ make
 ./rv32i-emu
 ```
 
-### Generar los binarios de los tests
+### Generate test binaries
 
 ```bash
-# Clonar riscv-tests con sus submodulos
+# Clone riscv-tests with its submodules
 git clone --recurse-submodules https://github.com/riscv-software-src/riscv-tests
 cd riscv-tests
 autoconf && ./configure --prefix=$PWD/build
 make isa XLEN=32
 
-# Extraer todos los tests rv32ui-p como binarios planos
+# Extract all rv32ui-p tests as flat binaries
 cd isa
 for f in rv32ui-p-*; do
     [[ "$f" == *.dump ]] && continue
@@ -102,70 +102,70 @@ done
 
 ---
 
-## Cómo funciona
+## How It Works
 
-### Ciclo de instrucción
+### Instruction Cycle
 
-Cada llamada a `cpu.step()` ejecuta un ciclo completo:
+Each call to `cpu.step()` executes a full cycle:
 
-1. **Fetch**: Lee 4 bytes de memoria en la dirección del PC y avanza el PC en 4.
-2. **Decode**: Extrae el opcode y los campos de la instrucción (rd, rs1, rs2, funct3, funct7, inmediatos).
-3. **Execute**: Llama al handler correspondiente usando una tabla de punteros a funciones indexada por opcode.
+1. **Fetch**: Reads 4 bytes from memory at the PC address and advances the PC by 4.
+2. **Decode**: Extracts the opcode and instruction fields (rd, rs1, rs2, funct3, funct7, immediates).
+3. **Execute**: Calls the corresponding handler using a function pointer table indexed by opcode.
 
-### Memoria (MMU)
+### Memory (MMU)
 
-La MMU es un vector plano de bytes con una dirección base configurable (`0x80000000` por defecto). Todas las direcciones virtuales se traducen a índices físicos restando la base. Soporta accesos de 1, 2 y 4 bytes en formato little-endian.
+The MMU is a flat byte vector with a configurable base address (`0x80000000` by default). All virtual addresses are translated to physical indices by subtracting the base. Supports 1, 2, and 4-byte little-endian accesses.
 
-### Detección de resultado en los tests
+### Test Result Detection
 
-Los tests de `riscv-tests` no usan ECALL para indicar éxito o fallo de forma estándar. En cambio, almacenan el resultado en el registro `gp` (x3):
+The `riscv-tests` tests do not use ECALL to signal pass/fail in a standard way. Instead, they store the result in the `gp` register (x3):
 
-- `gp == 1` → todos los casos del test pasaron.
-- `gp == N` (N par) → el caso `N/2` falló.
+- `gp == 1` → all test cases passed.
+- `gp == N` (N even) → test case `N/2` failed.
 
-El emulador lee este registro al recibir el ECALL final e imprime el resultado.
-
----
-
-## Próximos pasos
-
-### Corto plazo — completar RV32I
-
-El objetivo inmediato es pasar los 40 tests de `rv32ui-p-*`.
-
-- [ ] Implementar `OP` (opcode `0x33`): instrucciones R-type completas (`ADD`, `SUB`, `AND`, `OR`, `XOR`, `SLL`, `SRL`, `SRA`, `SLT`, `SLTU`)
-- [ ] Completar `OP-IMM` (opcode `0x13`): `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`
-- [ ] Pasar todos los tests `rv32ui-p-*`
-
-### Mediano plazo — calidad del emulador
-
-Una vez que RV32I esté completo:
-
-- [ ] Aceptar el binario a ejecutar como argumento de línea de comandos en lugar de tenerlo hardcodeado
-- [ ] Agregar un modo silencioso (sin debug por instrucción) para correr los tests más rápido
-- [ ] Script que corra todos los tests automáticamente e imprima un resumen de cuántos pasan
-- [ ] Manejo de excepciones básico (instrucción ilegal, acceso a memoria inválido)
-
-### Largo plazo — extensiones opcionales
-
-Para quienes quieran ir más allá de RV32I base:
-
-- [ ] Extensión **M** (multiplicación y división): `MUL`, `DIV`, `REM` y sus variantes
-- [ ] CSRs reales: implementar los registros de control básicos (`mstatus`, `mepc`, `mcause`, `mtvec`)
-- [ ] Manejo real de traps y excepciones
-- [ ] Soporte para **RV64I** (registros de 64 bits, nuevas instrucciones `W`)
+The emulator reads this register on the final ECALL and prints the result.
 
 ---
 
-## Referencias
+## Roadmap
 
-- [Especificación oficial RISC-V](https://riscv.org/technical/specifications/)
-- [riscv-tests en GitHub](https://github.com/riscv-software-src/riscv-tests)
+### Short Term — Complete RV32I
+
+The immediate goal is to pass all 40 `rv32ui-p-*` tests.
+
+- [ ] Implement `OP` (opcode `0x33`): full R-type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, `SLL`, `SRL`, `SRA`, `SLT`, `SLTU`)
+- [ ] Complete `OP-IMM` (opcode `0x13`): `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`
+- [ ] Pass all `rv32ui-p-*` tests
+
+### Medium Term — Emulator Quality
+
+Once RV32I is complete:
+
+- [ ] Accept the binary to run as a command-line argument instead of hardcoding the path
+- [ ] Add a silent mode (no per-instruction debug output) for faster test runs
+- [ ] Script to run all tests automatically and print a pass/fail summary
+- [ ] Basic exception handling (illegal instruction, invalid memory access)
+
+### Long Term — Optional Extensions
+
+For those who want to go beyond the base RV32I:
+
+- [ ] **M extension** (multiply/divide): `MUL`, `DIV`, `REM` and their variants
+- [ ] Real CSRs: implement basic control registers (`mstatus`, `mepc`, `mcause`, `mtvec`)
+- [ ] Proper trap and exception handling
+- [ ] **RV64I** support (64-bit registers, new `W`-suffix instructions)
+
+---
+
+## References
+
+- [Official RISC-V Specification](https://riscv.org/technical/specifications/)
+- [riscv-tests on GitHub](https://github.com/riscv-software-src/riscv-tests)
 - [RISC-V ISA Reference Card](https://github.com/jameslzhu/riscv-card)
-- [rv32i unprivileged spec (PDF)](https://github.com/riscv/riscv-isa-manual/releases)
+- [RV32I Unprivileged Spec (PDF)](https://github.com/riscv/riscv-isa-manual/releases)
 
 ---
 
-## Licencia
+## License
 
-Ver `LICENSE`.
+See `LICENSE`.
