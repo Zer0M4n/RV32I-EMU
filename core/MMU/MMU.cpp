@@ -1,58 +1,38 @@
 #include "MMU.h"
+#include <stdexcept>
 
-MMU::MMU(size_t size) : RAM(size, 0) {}
-uint8_t MMU::loadByte(uint32_t addres)
-{
-    if (addres >= RAM.size())
-        return 0; // Evita crasheos si lees fuera de la RAM
-    return RAM[addres];
-}
-uint16_t MMU::loadHalfWolf(uint32_t addres)
-{
-    if (addres + 1 >= RAM.size())
-        return 0;
+MMU::MMU(size_t size, uint32_t base) : RAM(size, 0), base_addr(base) {}
 
-    // Unimos 2 bytes con formato Little-Endian
-    uint16_t b0 = RAM[addres];
-    uint16_t b1 = RAM[addres + 1] << 8;
-    return b0 | b1;
-}
-uint32_t MMU::loadWord(uint32_t addres)
-{
-    // Verificamos que no nos salgamos de la memoria
-    if (addres + 3 >= RAM.size())
-        return 0;
-
-    // Combinamos 4 bytes usando desplazamientos de bits (Little-Endian)
-    uint32_t b0 = RAM[addres];
-    uint32_t b1 = RAM[addres + 1] << 8;
-    uint32_t b2 = RAM[addres + 2] << 16;
-    uint32_t b3 = RAM[addres + 3] << 24;
-
-    return b0 | b1 | b2 | b3;
+static inline uint32_t phys(uint32_t addr, uint32_t base, size_t size) {
+    uint32_t p = addr - base;
+    if (p >= size) throw std::out_of_range("MMU: acceso fuera de rango");
+    return p;
 }
 
-void MMU::storeByte(uint32_t address, uint8_t val)
-{
-    RAM[address] = val;
+uint8_t MMU::loadByte(uint32_t addr) {
+    return RAM[phys(addr, base_addr, RAM.size())];
 }
-void MMU::storeHalfWolf(uint32_t address, uint16_t val)
-{
-    RAM[address] = val & 0xFF;
-    RAM[address + 1] = (val >> 8) & 0xFF;
+uint16_t MMU::loadHalfWolf(uint32_t addr) {
+    uint32_t p = phys(addr, base_addr, RAM.size());
+    return RAM[p] | (RAM[p+1] << 8);
 }
-void MMU::storeWord(uint32_t address, uint32_t val)
-{
-    RAM[address] = val & 0xFF;
-    RAM[address + 1] = (val >> 8) & 0xFF;
-    RAM[address + 2] = (val >> 16) & 0xFF;
-    RAM[address + 3] = (val >> 24) & 0xFF;
+uint32_t MMU::loadWord(uint32_t addr) {
+    uint32_t p = phys(addr, base_addr, RAM.size());
+    return RAM[p] | (RAM[p+1]<<8) | (RAM[p+2]<<16) | (RAM[p+3]<<24);
 }
-
-void MMU::loadBinary(const std::vector<uint8_t> &bin, uint32_t base)
-{
-    std::copy(bin.begin(), bin.end(), RAM.begin() + base);
+void MMU::storeByte(uint32_t addr, uint8_t val) {
+    RAM[phys(addr, base_addr, RAM.size())] = val;
 }
-MMU::~MMU()
-{
+void MMU::storeHalfWolf(uint32_t addr, uint16_t val) {
+    uint32_t p = phys(addr, base_addr, RAM.size());
+    RAM[p] = val & 0xFF; RAM[p+1] = val >> 8;
 }
+void MMU::storeWord(uint32_t addr, uint32_t val) {
+    uint32_t p = phys(addr, base_addr, RAM.size());
+    RAM[p]=val; RAM[p+1]=val>>8; RAM[p+2]=val>>16; RAM[p+3]=val>>24;
+}
+void MMU::loadBinary(const std::vector<uint8_t>& bin, uint32_t base) {
+    uint32_t p = phys(base, base_addr, RAM.size());
+    std::copy(bin.begin(), bin.end(), RAM.begin() + p);
+}
+MMU::~MMU() {}

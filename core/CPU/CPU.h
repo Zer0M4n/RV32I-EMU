@@ -26,6 +26,7 @@ private:
     uint32_t fetch();
 
 public:
+    bool halted;
     CPU(MMU& mmu_instance);
     ~CPU() {} 
     void step();
@@ -33,6 +34,16 @@ public:
     void LUI(uint32_t instr); 
     void OP_IMM(uint32_t instr);
     void STORE(uint32_t instr);
+    void LOAD(uint32_t instr);
+    void BRANCH(uint32_t instr); // Saltos condicionales (BEQ, BNE, etc)
+    void JAL(uint32_t instr);    // Jump and Link
+    void JALR(uint32_t instr);   // Jump and Link Register
+    void SYSTEM(uint32_t instr);
+
+    void AUIPC(uint32_t instr);   // 0x17
+    void OP(uint32_t instr);      // 0x33  (ADD, SUB, AND, OR, XOR, SLL, SRL, SRA, SLT, SLTU)
+    void FENCE(uint32_t instr);
 };
+
 
 #endif
