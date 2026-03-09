@@ -15,7 +15,7 @@ int main() {
     
     memoria.loadBinary(buf, 0x80000000); // <-- carga en el lugar correcto
 
-    while (!cpu.halted) {
+    while (!cpu.isHalted()) {
         cpu.step();
 
         // Los tests escriben aquí para indicar éxito o fallo

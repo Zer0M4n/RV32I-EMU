@@ -153,6 +153,30 @@ core/CPU/CPU.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.s
 .PHONY : core/CPU/CPU.cpp.s
 
+core/Instructionset/Instructionset.o: core/Instructionset/Instructionset.cpp.o
+.PHONY : core/Instructionset/Instructionset.o
+
+# target to build an object file
+core/Instructionset/Instructionset.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o
+.PHONY : core/Instructionset/Instructionset.cpp.o
+
+core/Instructionset/Instructionset.i: core/Instructionset/Instructionset.cpp.i
+.PHONY : core/Instructionset/Instructionset.i
+
+# target to preprocess a source file
+core/Instructionset/Instructionset.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.i
+.PHONY : core/Instructionset/Instructionset.cpp.i
+
+core/Instructionset/Instructionset.s: core/Instructionset/Instructionset.cpp.s
+.PHONY : core/Instructionset/Instructionset.s
+
+# target to generate assembly for a file
+core/Instructionset/Instructionset.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.s
+.PHONY : core/Instructionset/Instructionset.cpp.s
+
 core/MMU/MMU.o: core/MMU/MMU.cpp.o
 .PHONY : core/MMU/MMU.o
 
@@ -213,6 +237,9 @@ help:
 	@echo "... core/CPU/CPU.o"
 	@echo "... core/CPU/CPU.i"
 	@echo "... core/CPU/CPU.s"
+	@echo "... core/Instructionset/Instructionset.o"
+	@echo "... core/Instructionset/Instructionset.i"
+	@echo "... core/Instructionset/Instructionset.s"
 	@echo "... core/MMU/MMU.o"
 	@echo "... core/MMU/MMU.i"
 	@echo "... core/MMU/MMU.s"

@@ -1,49 +1,33 @@
-#ifndef CPU_H
-#define CPU_H
+#pragma once
 
-#include <iostream>
+#include "Instructionset.h"
+#include "MMU.h"
+
 #include <array>
 #include <cstdint>
-#include<iomanip>
-#include "../MMU/MMU.h"
+#include <iostream>
+#include <iomanip>
 
-class CPU {
-private:
-    MMU& memory;
-    std::array<uint32_t, 32> regs;
-    uint32_t PC;
+// OpcodeHandler ya está definido en InstructionSet.h
 
-    using Instruction = void(CPU::*)(uint32_t); 
-    std::array<Instruction, 128> opcode_pointer; 
-
-    static uint8_t opcode(uint32_t i);
-    static uint8_t rd(uint32_t i);
-    static uint8_t funct3(uint32_t i);
-    static uint8_t rs1(uint32_t i);
-    static uint8_t rs2(uint32_t i);
-    static uint8_t funct7(uint32_t i);
-
-    uint32_t fetch();
-
+class CPU : public InstructionSet {
 public:
-    bool halted;
-    CPU(MMU& mmu_instance);
-    ~CPU() {} 
+    explicit CPU(MMU& mmu);
+
     void step();
-    //opcodes
-    void LUI(uint32_t instr); 
-    void OP_IMM(uint32_t instr);
-    void STORE(uint32_t instr);
-    void LOAD(uint32_t instr);
-    void BRANCH(uint32_t instr); // Saltos condicionales (BEQ, BNE, etc)
-    void JAL(uint32_t instr);    // Jump and Link
-    void JALR(uint32_t instr);   // Jump and Link Register
-    void SYSTEM(uint32_t instr);
+    bool isHalted() const { return halted; }
 
-    void AUIPC(uint32_t instr);   // 0x17
-    void OP(uint32_t instr);      // 0x33  (ADD, SUB, AND, OR, XOR, SLL, SRL, SRA, SLT, SLTU)
-    void FENCE(uint32_t instr);
+private:
+    // ── Estado del procesador ─────────────────────────────────────────────
+    std::array<uint32_t, 32> regs    {};
+    uint32_t                 PC      { 0x80000000 };
+    bool                     halted  { false };
+    MMU&                     memory;
+
+    // ── Tabla de despacho ─────────────────────────────────────────────────
+    std::array<OpcodeHandler, 128> opcode_table {};
+
+    // ── Ciclo fetch / decode ──────────────────────────────────────────────
+    uint32_t fetch();
+    void     printState(uint32_t pc, uint32_t inst, uint8_t op) const;
 };
-
-
-#endif

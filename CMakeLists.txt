@@ -8,6 +8,7 @@ add_executable(rv32i-emu
     main.cpp
     core/CPU/CPU.cpp
     core/MMU/MMU.cpp
+    core/Instructionset/Instructionset.cpp
 
 )
 
@@ -15,4 +16,5 @@ add_executable(rv32i-emu
 target_include_directories(rv32i-emu PRIVATE
     core/CPU
     core/MMU
+    core/Instructionset
 )
