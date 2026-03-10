@@ -9,7 +9,7 @@ int main() {
     MMU memoria(2 * 1024 * 1024, 0x80000000);
     CPU cpu(memoria);
 
-    std::ifstream file("/home/developer/projects/RV32I-EMU/rv32ui-p-simple.bin", std::ios::binary);
+    std::ifstream file("/home/developer/projects/RV32I-EMU/test.bin", std::ios::binary);
     if (!file) { std::cerr << "Error abriendo binario\n"; return 1; }
 
     std::vector<uint8_t> buf(std::istreambuf_iterator<char>(file), {});

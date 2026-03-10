@@ -28,6 +28,13 @@ The emulator can load ELF binaries extracted as `.bin` files, execute them in me
 | Test | Status |
 |---|---|
 | `rv32ui-p-simple` | ✅ PASS |
+| Type-R |
+| `rv32ui-p-add` | ✅ PASS |
+| `rv32ui-p-addi` | ✅ PASS |
+| Type-I |
+| Type-S |
+| Type-U |
+| Type-J |
 
 ---
 
