@@ -201,6 +201,30 @@ core/MMU/MMU.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.s
 .PHONY : core/MMU/MMU.cpp.s
 
+core/debug/DebugUI.o: core/debug/DebugUI.cpp.o
+.PHONY : core/debug/DebugUI.o
+
+# target to build an object file
+core/debug/DebugUI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o
+.PHONY : core/debug/DebugUI.cpp.o
+
+core/debug/DebugUI.i: core/debug/DebugUI.cpp.i
+.PHONY : core/debug/DebugUI.i
+
+# target to preprocess a source file
+core/debug/DebugUI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.i
+.PHONY : core/debug/DebugUI.cpp.i
+
+core/debug/DebugUI.s: core/debug/DebugUI.cpp.s
+.PHONY : core/debug/DebugUI.s
+
+# target to generate assembly for a file
+core/debug/DebugUI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.s
+.PHONY : core/debug/DebugUI.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -243,6 +267,9 @@ help:
 	@echo "... core/MMU/MMU.o"
 	@echo "... core/MMU/MMU.i"
 	@echo "... core/MMU/MMU.s"
+	@echo "... core/debug/DebugUI.o"
+	@echo "... core/debug/DebugUI.i"
+	@echo "... core/debug/DebugUI.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

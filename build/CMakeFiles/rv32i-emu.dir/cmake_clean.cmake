@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o.d"
   "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o"
   "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o.d"
+  "CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o"
+  "CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o.d"
   "CMakeFiles/rv32i-emu.dir/main.cpp.o"
   "CMakeFiles/rv32i-emu.dir/main.cpp.o.d"
   "rv32i-emu"

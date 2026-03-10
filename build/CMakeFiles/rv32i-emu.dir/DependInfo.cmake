@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/developer/projects/RV32I-EMU/core/CPU/CPU.cpp" "CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o" "gcc" "CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o.d"
   "/home/developer/projects/RV32I-EMU/core/Instructionset/Instructionset.cpp" "CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o" "gcc" "CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o.d"
   "/home/developer/projects/RV32I-EMU/core/MMU/MMU.cpp" "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o" "gcc" "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o.d"
+  "/home/developer/projects/RV32I-EMU/core/debug/DebugUI.cpp" "CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o" "gcc" "CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o.d"
   "/home/developer/projects/RV32I-EMU/main.cpp" "CMakeFiles/rv32i-emu.dir/main.cpp.o" "gcc" "CMakeFiles/rv32i-emu.dir/main.cpp.o.d"
   )
 

@@ -11,6 +11,7 @@
 		"commands" : 
 		[
 			"add_executable",
+			"target_link_libraries",
 			"target_include_directories"
 		],
 		"files" : 
@@ -25,13 +26,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 7,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 16,
+				"line" : 29,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 20,
 				"parent" : 0
 			}
 		]
@@ -51,16 +58,20 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"path" : "/home/developer/projects/RV32I-EMU/core/CPU"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"path" : "/home/developer/projects/RV32I-EMU/core/MMU"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"path" : "/home/developer/projects/RV32I-EMU/core/Instructionset"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/home/developer/projects/RV32I-EMU/core/debug"
 				}
 			],
 			"language" : "CXX",
@@ -68,7 +79,7 @@
 			{
 				"backtraces" : 
 				[
-					1
+					2
 				],
 				"standard" : "17"
 			},
@@ -77,7 +88,8 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				4
 			]
 		}
 	],
@@ -93,6 +105,31 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/local/lib/libftxui-screen.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/local/lib/libftxui-dom.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/local/lib/libftxui-component.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/local/lib/libftxui-dom.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/local/lib/libftxui-screen.a",
+				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
@@ -113,7 +150,8 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				4
 			]
 		}
 	],
@@ -141,6 +179,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "core/Instructionset/Instructionset.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "core/debug/DebugUI.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
