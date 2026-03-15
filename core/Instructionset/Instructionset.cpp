@@ -73,7 +73,7 @@ void InstructionSet::OP_IMM(uint32_t instr) {
     }
 }
 
-// ── R-Type ────────────────────────────────────────────────────────────────────
+// ── R-Type (RV32I + RV32M) ────────────────────────────────────────────────────
 
 void InstructionSet::OP(uint32_t instr) {
     uint8_t dest = rd(instr);
@@ -84,6 +84,68 @@ void InstructionSet::OP(uint32_t instr) {
 
     if (dest == 0) return;
 
+    // ── RV32M: funct7 == 0x01 ─────────────────────────────────────────────
+    if (f7 == 0x01) {
+        int32_t  a = static_cast<int32_t>(regs[s1]);
+        int32_t  b = static_cast<int32_t>(regs[s2]);
+        uint32_t u = regs[s1];
+        uint32_t v = regs[s2];
+
+        switch (f3) {
+            case 0x0: // MUL — bits [31:0] del producto con signo
+                regs[dest] = static_cast<uint32_t>(
+                    static_cast<int64_t>(a) * static_cast<int64_t>(b));
+                break;
+            case 0x1: // MULH — bits [63:32] signed × signed
+                regs[dest] = static_cast<uint32_t>(
+                    (static_cast<int64_t>(a) * static_cast<int64_t>(b)) >> 32);
+                break;
+            case 0x2: // MULHSU — bits [63:32] signed × unsigned
+                regs[dest] = static_cast<uint32_t>(
+                    (static_cast<int64_t>(a) * static_cast<uint64_t>(v)) >> 32);
+                break;
+            case 0x3: // MULHU — bits [63:32] unsigned × unsigned
+                regs[dest] = static_cast<uint32_t>(
+                    (static_cast<uint64_t>(u) * static_cast<uint64_t>(v)) >> 32);
+                break;
+            case 0x4: // DIV — división entera con signo
+                if (b == 0) {
+                    regs[dest] = 0xFFFFFFFF;                        // división por cero → -1
+                } else if (a == INT32_MIN && b == -1) {
+                    regs[dest] = static_cast<uint32_t>(INT32_MIN);  // overflow
+                } else {
+                    regs[dest] = static_cast<uint32_t>(a / b);
+                }
+                break;
+            case 0x5: // DIVU — división entera sin signo
+                if (v == 0) {
+                    regs[dest] = 0xFFFFFFFF;                        // división por cero → 2^32-1
+                } else {
+                    regs[dest] = u / v;
+                }
+                break;
+            case 0x6: // REM — resto con signo
+                if (b == 0) {
+                    regs[dest] = static_cast<uint32_t>(a);          // división por cero → dividendo
+                } else if (a == INT32_MIN && b == -1) {
+                    regs[dest] = 0;                                  // overflow → 0
+                } else {
+                    regs[dest] = static_cast<uint32_t>(a % b);
+                }
+                break;
+            case 0x7: // REMU — resto sin signo
+                if (v == 0) {
+                    regs[dest] = u;                                  // división por cero → dividendo
+                } else {
+                    regs[dest] = u % v;
+                }
+                break;
+            default: break;
+        }
+        return;
+    }
+
+    // ── RV32I base ────────────────────────────────────────────────────────
     switch (f3) {
         case 0x0: regs[dest] = (f7 == 0x20)
                     ? regs[s1] - regs[s2]           // SUB

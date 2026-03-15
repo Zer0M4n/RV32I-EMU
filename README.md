@@ -1,40 +1,90 @@
 # RV32I-EMU
 
-A RISC-V (RV32I) emulator written in C++ from scratch, built for personal learning. The goal is to understand how a CPU works at the instruction cycle level: fetch, decode, and execute.
+A RISC-V (RV32IM) emulator written in C++ from scratch, built for personal learning. The goal is to understand how a CPU works at the instruction cycle level: fetch, decode, and execute — and eventually run real programs and a small OS.
 
 ---
 
 ## Current Status
 
-The emulator can load ELF binaries extracted as `.bin` files, execute them in memory, and report whether a test passed or failed using the `riscv-tests` convention.
+The emulator loads ELF binaries, executes them in memory, and reports pass/fail using the `riscv-tests` convention via `tohost`. It includes an interactive TUI debugger (FTXUI) with register view, instruction trace, memory dump, and real-time test result panel.
 
 ### Implemented Instructions
 
 | Group | Instructions |
 |---|---|
-| **LUI** | `LUI` |
-| **AUIPC** | `AUIPC` |
-| **OP-IMM** | `ADDI` |
+| **LUI / AUIPC** | `LUI`, `AUIPC` |
+| **OP-IMM** | `ADDI`, `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI` |
+| **OP (RV32I)** | `ADD`, `SUB`, `SLL`, `SLT`, `SLTU`, `XOR`, `SRL`, `SRA`, `OR`, `AND` |
+| **OP (RV32M)** | `MUL`, `MULH`, `MULHSU`, `MULHU`, `DIV`, `DIVU`, `REM`, `REMU` |
 | **LOAD** | `LB`, `LH`, `LW`, `LBU`, `LHU` |
 | **STORE** | `SB`, `SH`, `SW` |
 | **BRANCH** | `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU` |
-| **JAL** | `JAL` |
-| **JALR** | `JALR` |
-| **SYSTEM** | `ECALL`, `EBREAK` |
+| **JAL / JALR** | `JAL`, `JALR` |
+| **SYSTEM** | `ECALL`, `EBREAK`, `MRET`, `CSRRW`, `CSRRS`, `CSRRC` (+ `I` variants) |
 | **MISC-MEM** | `FENCE` (no-op) |
+
+### CSRs Implemented
+
+`mstatus`, `misa` (read-only), `medeleg`, `mideleg`, `mie`, `mtvec`, `mscratch`, `mepc`, `mcause`, `satp`, `pmpcfg0`, `pmpaddr0`, `mhartid` (read-only)
 
 ### Passing Tests
 
+#### RV32UI — Base Integer
 | Test | Status |
 |---|---|
 | `rv32ui-p-simple` | ✅ PASS |
-| Type-R |
 | `rv32ui-p-add` | ✅ PASS |
 | `rv32ui-p-addi` | ✅ PASS |
-| Type-I |
-| Type-S |
-| Type-U |
-| Type-J |
+| `rv32ui-p-and` | ✅ PASS |
+| `rv32ui-p-andi` | ✅ PASS |
+| `rv32ui-p-auipc` | ✅ PASS |
+| `rv32ui-p-beq` | ✅ PASS |
+| `rv32ui-p-bge` | ✅ PASS |
+| `rv32ui-p-bgeu` | ✅ PASS |
+| `rv32ui-p-blt` | ✅ PASS |
+| `rv32ui-p-bltu` | ✅ PASS |
+| `rv32ui-p-bne` | ✅ PASS |
+| `rv32ui-p-fence_i` | ✅ PASS |
+| `rv32ui-p-jal` | ✅ PASS |
+| `rv32ui-p-jalr` | ✅ PASS |
+| `rv32ui-p-lb` | ✅ PASS |
+| `rv32ui-p-lbu` | ✅ PASS |
+| `rv32ui-p-lh` | ✅ PASS |
+| `rv32ui-p-lhu` | ✅ PASS |
+| `rv32ui-p-lui` | ✅ PASS |
+| `rv32ui-p-lw` | ✅ PASS |
+| `rv32ui-p-or` | ✅ PASS |
+| `rv32ui-p-ori` | ✅ PASS |
+| `rv32ui-p-sb` | ✅ PASS |
+| `rv32ui-p-sh` | ✅ PASS |
+| `rv32ui-p-sll` | ✅ PASS |
+| `rv32ui-p-slli` | ✅ PASS |
+| `rv32ui-p-slt` | ✅ PASS |
+| `rv32ui-p-slti` | ✅ PASS |
+| `rv32ui-p-sltiu` | ✅ PASS |
+| `rv32ui-p-sltu` | ✅ PASS |
+| `rv32ui-p-sra` | ✅ PASS |
+| `rv32ui-p-srai` | ✅ PASS |
+| `rv32ui-p-srl` | ✅ PASS |
+| `rv32ui-p-srli` | ✅ PASS |
+| `rv32ui-p-sub` | ✅ PASS |
+| `rv32ui-p-sw` | ✅ PASS |
+| `rv32ui-p-xor` | ✅ PASS |
+| `rv32ui-p-xori` | ✅ PASS |
+
+#### RV32UM — Multiply/Divide Extension
+| Test | Status |
+|---|---|
+| `rv32um-p-mul` | ✅ PASS |
+| `rv32um-p-mulh` | ✅ PASS |
+| `rv32um-p-mulhsu` | ✅ PASS |
+| `rv32um-p-mulhu` | ✅ PASS |
+| `rv32um-p-div` | ✅ PASS |
+| `rv32um-p-divu` | ✅ PASS |
+| `rv32um-p-rem` | ✅ PASS |
+| `rv32um-p-remu` | ✅ PASS |
+
+**47 / 47 tests passing.**
 
 ---
 
@@ -44,14 +94,21 @@ The emulator can load ELF binaries extracted as `.bin` files, execute them in me
 RV32I-EMU/
 ├── core/
 │   ├── CPU/
-│   │   ├── CPU.h       # CPU class definition
-│   │   └── CPU.cpp     # Fetch / decode / execute implementation
-│   └── MMU/
-│       ├── MMU.h       # MMU class definition
-│       └── MMU.cpp     # Flat memory with configurable base address
-├── main.cpp            # Entry point: loads the binary and runs the emulator
-├── CMakeLists.txt
-└── *.bin               # riscv-tests binaries
+│   │   ├── CPU.h              # CPU class definition
+│   │   └── CPU.cpp            # Fetch / decode / execute loop
+│   ├── MMU/
+│   │   ├── MMU.h              # MMU class definition
+│   │   └── MMU.cpp            # Flat memory, tohost detection
+│   ├── InstructionSet/
+│   │   ├── Instructionset.h   # Base class with opcode dispatch table
+│   │   └── Instructionset.cpp # All instruction handlers (RV32I + RV32M)
+│   ├── Logger.h               # Thread-safe snapshot logger
+│   ├── DebugUI.h / .cpp       # FTXUI interactive debugger
+│   └── test/
+│       ├── test-ui/           # rv32ui-p-* binaries
+│       └── test-m/            # rv32um-p-* binaries
+├── main.cpp                   # Entry point: ELF loader, batch mode, TUI
+└── CMakeLists.txt
 ```
 
 ---
@@ -62,9 +119,10 @@ RV32I-EMU/
 
 - `cmake` >= 3.10
 - `g++` with C++17 support
-- `riscv64-unknown-elf-gcc` (only needed to generate test binaries, not to build the emulator)
+- `ftxui` (for the debug TUI)
+- `riscv64-unknown-elf-gcc` (only to regenerate test binaries)
 
-### Build the emulator
+### Build
 
 ```bash
 mkdir build && cd build
@@ -72,39 +130,26 @@ cmake ..
 make
 ```
 
-The binary will be at `build/rv32i-emu`.
-
-### Run a test
-
-Change the binary path in `main.cpp` and recompile:
-
-```cpp
-std::ifstream file("/path/to/rv32ui-p-add.bin", std::ios::binary);
-```
-
-Then:
+### Run a single test (TUI mode)
 
 ```bash
-cd build
-make
-./rv32i-emu
+./build/rv32i-emu core/test/test-ui/rv32ui-p-add
+```
+
+### Run all tests (batch mode)
+
+```bash
+./build/rv32i-emu core/test/test-ui --batch
+./build/rv32i-emu core/test/test-m  --batch
 ```
 
 ### Generate test binaries
 
 ```bash
-# Clone riscv-tests with its submodules
 git clone --recurse-submodules https://github.com/riscv-software-src/riscv-tests
 cd riscv-tests
 autoconf && ./configure --prefix=$PWD/build
 make isa XLEN=32
-
-# Extract all rv32ui-p tests as flat binaries
-cd isa
-for f in rv32ui-p-*; do
-    [[ "$f" == *.dump ]] && continue
-    riscv64-unknown-elf-objcopy -O binary "$f" "../../${f}.bin"
-done
 ```
 
 ---
@@ -113,54 +158,61 @@ done
 
 ### Instruction Cycle
 
-Each call to `cpu.step()` executes a full cycle:
+Each `cpu.step()` runs a full fetch–decode–execute cycle:
 
-1. **Fetch**: Reads 4 bytes from memory at the PC address and advances the PC by 4.
-2. **Decode**: Extracts the opcode and instruction fields (rd, rs1, rs2, funct3, funct7, immediates).
-3. **Execute**: Calls the corresponding handler using a function pointer table indexed by opcode.
+1. **Fetch** — reads 4 bytes from memory at PC, advances PC by 4.
+2. **Decode** — extracts opcode, rd, rs1, rs2, funct3, funct7, immediates.
+3. **Execute** — dispatches via a 128-entry function pointer table indexed by opcode.
+
+### RV32M Dispatch
+
+The M extension shares opcode `0x33` with base R-type instructions. Dispatch is done inside `OP()` by checking `funct7 == 0x01` before the RV32I switch, with correct handling of all edge cases: division by zero, signed overflow (`INT_MIN / -1`).
 
 ### Memory (MMU)
 
-The MMU is a flat byte vector with a configurable base address (`0x80000000` by default). All virtual addresses are translated to physical indices by subtracting the base. Supports 1, 2, and 4-byte little-endian accesses.
+Flat byte vector with base address `0x80000000`. Supports 1, 2, and 4-byte little-endian accesses. Monitors a `tohost` address to detect test completion.
 
 ### Test Result Detection
 
-The `riscv-tests` tests do not use ECALL to signal pass/fail in a standard way. Instead, they store the result in the `gp` register (x3):
+Tests write to the `tohost` symbol at the end of execution:
+- `tohost == 1` → **PASS**
+- `tohost == (N << 1) | 1` → **FAIL**, test case N
 
-- `gp == 1` → all test cases passed.
-- `gp == N` (N even) → test case `N/2` failed.
+### Debug TUI
 
-The emulator reads this register on the final ECALL and prints the result.
+Interactive terminal UI (FTXUI):
+- **Left panel** — all 32 registers with ABI names, highlighted on change
+- **Center panel** — instruction trace (last 20 instructions)
+- **Right panel** — memory hex dump around PC + test result
+- **Controls**: `Space` step, `R` run/pause, `Q` quit
 
 ---
 
 ## Roadmap
 
-### Short Term — Complete RV32I
+### Next — RV32C (Compressed Instructions)
 
-The immediate goal is to pass all 40 `rv32ui-p-*` tests.
+The C extension adds 16-bit encodings for the most common instructions. Required to run binaries compiled without `-mno-rvc`.
 
-- [ ] Implement `OP` (opcode `0x33`): full R-type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, `SLL`, `SRL`, `SRA`, `SLT`, `SLTU`)
-- [ ] Complete `OP-IMM` (opcode `0x13`): `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`
-- [ ] Pass all `rv32ui-p-*` tests
+- [ ] Implement 16-bit instruction fetch and decode
+- [ ] Map all C.* instructions to their 32-bit equivalents
+- [ ] Pass `rv32uc-p-*` tests
 
-### Medium Term — Emulator Quality
+### Medium Term
 
-Once RV32I is complete:
+- [ ] Run real C programs compiled with `riscv32-unknown-elf-gcc` + newlib
+- [ ] Implement basic syscalls: `write`, `exit`, `brk`
+- [ ] GDB stub (RSP protocol) for connecting a real debugger
+- [ ] Exception/trap dispatch through `mtvec`
 
-- [ ] Accept the binary to run as a command-line argument instead of hardcoding the path
-- [ ] Add a silent mode (no per-instruction debug output) for faster test runs
-- [ ] Script to run all tests automatically and print a pass/fail summary
-- [ ] Basic exception handling (illegal instruction, invalid memory access)
+### Long Term — Goal: Boot a Small OS
 
-### Long Term — Optional Extensions
+The final goal is to boot [xv6-riscv](https://github.com/mit-pdos/xv6-riscv) or [FreeRTOS](https://www.freertos.org/) on the emulator. This requires:
 
-For those who want to go beyond the base RV32I:
-
-- [ ] **M extension** (multiply/divide): `MUL`, `DIV`, `REM` and their variants
-- [ ] Real CSRs: implement basic control registers (`mstatus`, `mepc`, `mcause`, `mtvec`)
-- [ ] Proper trap and exception handling
-- [ ] **RV64I** support (64-bit registers, new `W`-suffix instructions)
+- [ ] Supervisor mode + Sv32 paging (MMU with page table walker)
+- [ ] UART, CLINT, PLIC as MMIO peripherals
+- [ ] RV32A atomic instructions
+- [ ] Timer interrupts
 
 ---
 
@@ -170,6 +222,7 @@ For those who want to go beyond the base RV32I:
 - [riscv-tests on GitHub](https://github.com/riscv-software-src/riscv-tests)
 - [RISC-V ISA Reference Card](https://github.com/jameslzhu/riscv-card)
 - [RV32I Unprivileged Spec (PDF)](https://github.com/riscv/riscv-isa-manual/releases)
+- [FTXUI — Terminal UI library](https://github.com/ArthurSonzogni/FTXUI)
 
 ---
 

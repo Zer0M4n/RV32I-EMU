@@ -75,6 +75,10 @@ public:
                 return names[f3 & 0x7];
             }
             case 0x33: {
+                if (f7 == 0x01) {
+                    const char* m[] = {"MUL","MULH","MULHSU","MULHU","DIV","DIVU","REM","REMU"};
+                    return m[f3 & 0x7];
+                }
                 if (f3 == 0x0) return (f7 == 0x20) ? "SUB" : "ADD";
                 if (f3 == 0x5) return (f7 == 0x20) ? "SRA" : "SRL";
                 const char* names[] = {"ADD","SLL","SLT","SLTU","XOR","SRL","OR","AND"};
