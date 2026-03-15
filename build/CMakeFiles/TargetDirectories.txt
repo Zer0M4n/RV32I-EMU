@@ -1,3 +1,3 @@
-/home/developer/projects/RV32I-EMU/build/CMakeFiles/rv32i-emu.dir
-/home/developer/projects/RV32I-EMU/build/CMakeFiles/edit_cache.dir
-/home/developer/projects/RV32I-EMU/build/CMakeFiles/rebuild_cache.dir
+/home/zero/projects/RV32I-EMU/build/CMakeFiles/rv32i-emu.dir
+/home/zero/projects/RV32I-EMU/build/CMakeFiles/edit_cache.dir
+/home/zero/projects/RV32I-EMU/build/CMakeFiles/rebuild_cache.dir

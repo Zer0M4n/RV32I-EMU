@@ -2,7 +2,6 @@
 #include "MMU.h"
 
 // ── Registro de tabla de despacho ────────────────────────────────────────────
-// Al estar dentro de InstructionSet, puede tomar &InstructionSet::X sin problema
 
 void InstructionSet::registerOpcodes(std::array<OpcodeHandler, 128>& table) {
     table.fill(nullptr);
@@ -157,22 +156,21 @@ void InstructionSet::BRANCH(uint32_t instr) {
     uint8_t s2 = rs2(instr);
     uint8_t f3 = funct3(instr);
 
-    // Inmediato tipo-B con extensión de signo
     int32_t imm = ((static_cast<int32_t>(instr) >> 31) << 12)
                 | (((instr >>  7) & 0x1)  << 11)
                 | (((instr >> 25) & 0x3F) <<  5)
                 | (((instr >>  8) & 0xF)  <<  1);
 
-    uint32_t base_pc = PC - 4; // dirección de esta instrucción
+    uint32_t base_pc = PC - 4;
     bool take = false;
 
     switch (f3) {
-        case 0x0: take = (regs[s1] == regs[s2]);                                          break; // BEQ
-        case 0x1: take = (regs[s1] != regs[s2]);                                          break; // BNE
+        case 0x0: take = (regs[s1] == regs[s2]);                                             break; // BEQ
+        case 0x1: take = (regs[s1] != regs[s2]);                                             break; // BNE
         case 0x4: take = (static_cast<int32_t>(regs[s1]) <  static_cast<int32_t>(regs[s2])); break; // BLT
         case 0x5: take = (static_cast<int32_t>(regs[s1]) >= static_cast<int32_t>(regs[s2])); break; // BGE
-        case 0x6: take = (regs[s1] <  regs[s2]);                                          break; // BLTU
-        case 0x7: take = (regs[s1] >= regs[s2]);                                          break; // BGEU
+        case 0x6: take = (regs[s1] <  regs[s2]);                                             break; // BLTU
+        case 0x7: take = (regs[s1] >= regs[s2]);                                             break; // BGEU
         default:
             std::cout << "[ERROR] funct3 no implementado en BRANCH: 0x"
                       << std::hex << (int)f3 << "\n";
@@ -186,7 +184,6 @@ void InstructionSet::BRANCH(uint32_t instr) {
 void InstructionSet::JAL(uint32_t instr) {
     uint8_t dest = rd(instr);
 
-    // Inmediato tipo-J con extensión de signo
     int32_t imm = ((static_cast<int32_t>(instr) >> 31) << 20)
                 | (((instr >> 12) & 0xFF)  << 12)
                 | (((instr >> 20) & 0x1)   << 11)
@@ -195,7 +192,7 @@ void InstructionSet::JAL(uint32_t instr) {
     uint32_t base_pc = PC - 4;
 
     if (dest != 0)
-        regs[dest] = base_pc + 4; // dirección de retorno
+        regs[dest] = base_pc + 4;
 
     PC = base_pc + imm;
 }
@@ -206,7 +203,7 @@ void InstructionSet::JALR(uint32_t instr) {
     int32_t imm  = static_cast<int32_t>(instr) >> 20;
 
     uint32_t base_pc   = PC - 4;
-    uint32_t target_pc = (regs[s1] + imm) & ~1u; // bit 0 siempre 0
+    uint32_t target_pc = (regs[s1] + imm) & ~1u;
 
     if (dest != 0)
         regs[dest] = base_pc + 4;
@@ -215,30 +212,118 @@ void InstructionSet::JALR(uint32_t instr) {
 }
 
 // ── Sistema / privilegiado ────────────────────────────────────────────────────
+//
+// El reset_vector de riscv-tests hace lo siguiente antes de correr los tests:
+//
+//   1. csrr  a0, mhartid      → leer hart ID (debe ser 0)
+//   2. csrw  mtvec, t0        → setear vector de traps varias veces
+//   3. csrw  pmpaddr0 / pmpcfg0 → configurar PMP
+//   4. csrw  mepc, t0         → guardar PC de retorno = dirección de test_2
+//   5. mret                   → saltar a mepc (test_2) para correr los tests
+//
+// Sin mret el PC nunca llega a test_2 y el test nunca escribe tohost.
+// Sin los CSRs correctos el test cae en trap_vector y reporta FAIL.
 
 void InstructionSet::SYSTEM(uint32_t instr) {
     uint8_t  f3      = funct3(instr);
-    uint32_t funct12 = instr >> 20;
+    uint32_t csr_num = instr >> 20;   // bits [31:20] = número de CSR
+    uint8_t  dest    = rd(instr);
+    uint8_t  s1      = rs1(instr);
 
+    // ── Instrucciones especiales (f3 == 0) ───────────────────────────────
     if (f3 == 0x0) {
-        if (funct12 == 0x000) { // ECALL
-            if (regs[3] == 1)
-                std::cout << "\n✓ TEST PASSED\n";
-            else
-                std::cout << "\n✗ TEST FAILED en caso: "
-                          << std::dec << (regs[3] >> 1) << "\n";
+        switch (csr_num) {
+            case 0x000:  // ECALL — en riscv-tests solo llega aquí si RV32 sin S-mode
+                if (regs[17] == 93) {
+        // a7=93 es exit() — a0=0 significa PASS, a0!=0 significa FAIL
+        if (memory.tohost_addr != 0)
+            memory.storeWord(memory.tohost_addr,
+                regs[10] == 0 ? 1 : (regs[10] << 1 | 1));
+    }    
             halted = true;
-        } else if (funct12 == 0x001) { // EBREAK
-            halted = true;
+                break;
+            case 0x001:  // EBREAK
+                halted = true;
+                break;
+            case 0x302:  // MRET — retorna de excepción máquina saltando a mepc
+                // El reset_vector usa mret para saltar a test_2:
+                //   csrw mepc, t0   ← t0 apunta a test_2
+                //   mret            ← PC = mepc
+                PC = csr_mepc;
+                break;
+            // SRET, WFI y otros se ignoran silenciosamente
+            default:
+                break;
         }
-    } else {
-        // CSR — ignorar silenciosamente; devolver 0 si hay registro destino
-        uint8_t dest = rd(instr);
-        if (dest != 0) regs[dest] = 0;
+        return;
     }
+
+    // ── Tabla de lectura de CSRs ──────────────────────────────────────────
+    auto csr_read = [&](uint32_t addr) -> uint32_t {
+        switch (addr) {
+            case 0x300: return csr_mstatus;
+            case 0x301: return 0x40001100;  // misa: RV32I (solo lectura)
+            case 0x302: return csr_medeleg;
+            case 0x303: return csr_mideleg;
+            case 0x304: return csr_mie;
+            case 0x305: return csr_mtvec;
+            case 0x340: return csr_mscratch;
+            case 0x341: return csr_mepc;
+            case 0x342: return csr_mcause;
+            case 0x180: return csr_satp;
+            case 0x3a0: return csr_pmpcfg0;
+            case 0x3b0: return csr_pmpaddr0;
+            case 0xf14: return 0;           // mhartid: siempre 0 (hart único)
+            default:    return 0;           // CSR desconocido → 0
+        }
+    };
+
+    // ── Tabla de escritura de CSRs ────────────────────────────────────────
+    auto csr_write = [&](uint32_t addr, uint32_t val) {
+        switch (addr) {
+            case 0x300: csr_mstatus  = val; break;
+            case 0x302: csr_medeleg  = val; break;
+            case 0x303: csr_mideleg  = val; break;
+            case 0x304: csr_mie      = val; break;
+            case 0x305: csr_mtvec    = val; break;
+            case 0x340: csr_mscratch = val; break;
+            case 0x341: csr_mepc     = val; break;
+            case 0x342: csr_mcause   = val; break;
+            case 0x180: csr_satp     = val; break;
+            case 0x3a0: csr_pmpcfg0  = val; break;
+            case 0x3b0: csr_pmpaddr0 = val; break;
+            // misa (0x301) y mhartid (0xf14) son de solo lectura, se ignoran
+            default: break;
+        }
+    };
+
+    // ── Operaciones CSR (CSRRW / CSRRS / CSRRC y sus variantes imm) ──────
+    //
+    // f3 & 0x4 distingue variante registro (0) de variante zimm (1):
+    //   f3 = 0x1 → CSRRW   src = regs[s1]
+    //   f3 = 0x5 → CSRRWI  src = zimm (s1 como inmediato 5 bits)
+    //   f3 = 0x2 → CSRRS   old | src
+    //   f3 = 0x6 → CSRRSI
+    //   f3 = 0x3 → CSRRC   old & ~src
+    //   f3 = 0x7 → CSRRCI
+
+    uint32_t old_val = csr_read(csr_num);
+    uint32_t src     = (f3 & 0x4) ? (uint32_t)s1 : regs[s1];
+
+    switch (f3 & 0x3) {
+        case 0x1: csr_write(csr_num, src);             break; // CSRRW / CSRRWI
+        case 0x2: csr_write(csr_num, old_val |  src);  break; // CSRRS / CSRRSI
+        case 0x3: csr_write(csr_num, old_val & ~src);  break; // CSRRC / CSRRCI
+    }
+
+    // Escribir valor anterior en rd (si no es x0)
+    if (dest != 0) regs[dest] = old_val;
 }
 
+// ── FENCE ─────────────────────────────────────────────────────────────────────
+// No-op: emulador simple sin caché ni reordenamiento de memoria.
+// El test rv32ui-p-fence_i usa esta instrucción — debe existir pero no hacer nada.
+
 void InstructionSet::FENCE(uint32_t /*instr*/) {
-    // No-op: emulador simple sin caché que sincronizar
-    std::cout << "[FENCE] no-op\n";
+    // no-op intencional
 }

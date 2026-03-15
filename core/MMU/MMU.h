@@ -11,7 +11,9 @@ private:
     uint32_t base_addr;
 
 public:
-    static const uint32_t TOHOST_ADDR = 0x80001000; // Dirección donde los tests escriben resultado
+    // Seteados por el loader ELF al encontrar los símbolos
+    uint32_t tohost_addr   = 0;
+    uint32_t fromhost_addr = 0;
 
     uint8_t  loadByte(uint32_t addr);
     uint16_t loadHalfWolf(uint32_t addr);
@@ -23,7 +25,14 @@ public:
 
     void loadBinary(const std::vector<uint8_t>& bin, uint32_t base);
 
-    uint32_t getTohost() { return loadWord(TOHOST_ADDR); }
+    void setTohostAddr(uint32_t addr)  { tohost_addr   = addr; }
+    void setFromhostAddr(uint32_t addr){ fromhost_addr = addr; }
+
+    // Devuelve 0 si tohost no fue seteado
+    uint32_t getTohost() {
+        if (tohost_addr == 0) return 0;
+        return loadWord(tohost_addr);
+    }
 
     explicit MMU(size_t size, uint32_t base = 0x80000000);
     ~MMU();

@@ -1,0 +1,105 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Threads::Threads::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Threads__Threads-Debug-efe9ace1c6a42a0e267e.json",
+					"name" : "Threads::Threads",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ftxui::component::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ftxui__component-Debug-7c9daf2ae367f30c2b51.json",
+					"name" : "ftxui::component",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ftxui::dom::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ftxui__dom-Debug-7afa2f38f0f282e82c29.json",
+					"name" : "ftxui::dom",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ftxui::screen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ftxui__screen-Debug-882b8fa8d2796094acae.json",
+					"name" : "ftxui::screen",
+					"projectIndex" : 0
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-9ad1a58d4644cf6543fa.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "RV32I-EMU",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "rv32i-emu::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-rv32i-emu-Debug-c68cbc5604b045383099.json",
+					"name" : "rv32i-emu",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/zero/projects/RV32I-EMU/build",
+		"source" : "/home/zero/projects/RV32I-EMU"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	}
+}

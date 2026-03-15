@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/zero/projects/RV32I-EMU/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

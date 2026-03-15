@@ -1,6 +1,7 @@
 #include "CPU.h"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 // ── Constructor ───────────────────────────────────────────────────────────────
 
@@ -32,6 +33,12 @@ bool CPU::step() {
     uint32_t current_pc = PC;
     uint32_t inst       = fetch();
     uint8_t  op         = opcode(inst);  // viene de InstructionSet
+
+        static std::ofstream dbg("debug.log");
+    dbg << "PC=0x" << std::hex << current_pc
+        << "  op=0x" << (int)op
+        << "  inst=0x" << inst << "\n";
+    dbg.flush();
 
     if (opcode_table[op] != nullptr) {
         (this->*opcode_table[op])(inst);
