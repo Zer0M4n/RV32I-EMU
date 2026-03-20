@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "/usr/local/lib/libftxui-component.a"
+			"path" : "/usr/local/lib/libftxui-dom.a"
 		}
 	],
 	"backtrace" : 5,
@@ -50,13 +50,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 78,
+				"line" : 68,
 				"parent" : 4
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 80,
+				"line" : 70,
 				"parent" : 4
 			}
 		]
@@ -64,27 +64,27 @@
 	"codemodelVersion" : 
 	{
 		"major" : 2,
-		"minor" : 9
+		"minor" : 10
 	},
-	"id" : "ftxui::component::@6890427a1f51a3e7e1df",
+	"id" : "ftxui::dom::@6890427a1f51a3e7e1df",
 	"imported" : true,
 	"interfaceCompileDependencies" : 
 	[
 		{
 			"backtrace" : 6,
-			"id" : "ftxui::dom::@6890427a1f51a3e7e1df"
+			"id" : "ftxui::screen::@6890427a1f51a3e7e1df"
 		}
 	],
 	"interfaceLinkLibraries" : 
 	[
 		{
 			"backtrace" : 6,
-			"id" : "ftxui::dom::@6890427a1f51a3e7e1df"
+			"id" : "ftxui::screen::@6890427a1f51a3e7e1df"
 		}
 	],
 	"local" : true,
-	"name" : "ftxui::component",
-	"nameOnDisk" : "libftxui-component.a",
+	"name" : "ftxui::dom",
+	"nameOnDisk" : "libftxui-dom.a",
 	"paths" : 
 	{
 		"build" : ".",

@@ -7,28 +7,28 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Threads::Threads::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Threads__Threads-Debug-efe9ace1c6a42a0e267e.json",
+					"jsonFile" : "target-Threads__Threads-Debug-56e863d2a525451c57de.json",
 					"name" : "Threads::Threads",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ftxui::component::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ftxui__component-Debug-7c9daf2ae367f30c2b51.json",
+					"jsonFile" : "target-ftxui__component-Debug-f8d4499945c5d094e5d9.json",
 					"name" : "ftxui::component",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ftxui::dom::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ftxui__dom-Debug-7afa2f38f0f282e82c29.json",
+					"jsonFile" : "target-ftxui__dom-Debug-aae8993cb36dbd734f9b.json",
 					"name" : "ftxui::dom",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ftxui::screen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ftxui__screen-Debug-882b8fa8d2796094acae.json",
+					"jsonFile" : "target-ftxui__screen-Debug-9d2fccf3e0e78a4240a7.json",
 					"name" : "ftxui::screen",
 					"projectIndex" : 0
 				}
@@ -44,7 +44,7 @@
 						3
 					],
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-9ad1a58d4644cf6543fa.json",
+					"jsonFile" : "directory-.-Debug-fd6451d79dc282e2f566.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.10"
@@ -84,7 +84,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "rv32i-emu::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-rv32i-emu-Debug-c68cbc5604b045383099.json",
+					"jsonFile" : "target-rv32i-emu-Debug-aca21d31327aacce1370.json",
 					"name" : "rv32i-emu",
 					"projectIndex" : 0
 				}
@@ -100,6 +100,6 @@
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 9
+		"minor" : 10
 	}
 }
