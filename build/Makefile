@@ -201,6 +201,30 @@ core/MMU/MMU.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.s
 .PHONY : core/MMU/MMU.cpp.s
 
+core/Syscalls/Syscalls.o: core/Syscalls/Syscalls.cpp.o
+.PHONY : core/Syscalls/Syscalls.o
+
+# target to build an object file
+core/Syscalls/Syscalls.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Syscalls/Syscalls.cpp.o
+.PHONY : core/Syscalls/Syscalls.cpp.o
+
+core/Syscalls/Syscalls.i: core/Syscalls/Syscalls.cpp.i
+.PHONY : core/Syscalls/Syscalls.i
+
+# target to preprocess a source file
+core/Syscalls/Syscalls.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Syscalls/Syscalls.cpp.i
+.PHONY : core/Syscalls/Syscalls.cpp.i
+
+core/Syscalls/Syscalls.s: core/Syscalls/Syscalls.cpp.s
+.PHONY : core/Syscalls/Syscalls.s
+
+# target to generate assembly for a file
+core/Syscalls/Syscalls.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rv32i-emu.dir/build.make CMakeFiles/rv32i-emu.dir/core/Syscalls/Syscalls.cpp.s
+.PHONY : core/Syscalls/Syscalls.cpp.s
+
 core/debug/DebugUI.o: core/debug/DebugUI.cpp.o
 .PHONY : core/debug/DebugUI.o
 
@@ -267,6 +291,9 @@ help:
 	@echo "... core/MMU/MMU.o"
 	@echo "... core/MMU/MMU.i"
 	@echo "... core/MMU/MMU.s"
+	@echo "... core/Syscalls/Syscalls.o"
+	@echo "... core/Syscalls/Syscalls.i"
+	@echo "... core/Syscalls/Syscalls.s"
 	@echo "... core/debug/DebugUI.o"
 	@echo "... core/debug/DebugUI.i"
 	@echo "... core/debug/DebugUI.s"

@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug
+CXX_INCLUDES = -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls
 
 CXX_FLAGS = -g -std=gnu++17
 

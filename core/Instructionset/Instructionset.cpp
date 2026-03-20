@@ -288,32 +288,37 @@ void InstructionSet::JALR(uint32_t instr) {
 
 void InstructionSet::SYSTEM(uint32_t instr) {
     uint8_t  f3      = funct3(instr);
-    uint32_t csr_num = instr >> 20;   // bits [31:20] = número de CSR
+    uint32_t csr_num = instr >> 20;
     uint8_t  dest    = rd(instr);
     uint8_t  s1      = rs1(instr);
 
     // ── Instrucciones especiales (f3 == 0) ───────────────────────────────
     if (f3 == 0x0) {
         switch (csr_num) {
-            case 0x000:  // ECALL — en riscv-tests solo llega aquí si RV32 sin S-mode
-                if (regs[17] == 93) {
-        // a7=93 es exit() — a0=0 significa PASS, a0!=0 significa FAIL
-        if (memory.tohost_addr != 0)
-            memory.storeWord(memory.tohost_addr,
-                regs[10] == 0 ? 1 : (regs[10] << 1 | 1));
-    }    
-            halted = true;
+            case 0x000:  // ECALL
+                if (syscalls_) {
+                    // Modo Doom/programa: delegar al manejador de syscalls
+                    bool cont = syscalls_->handle();
+                    if (!cont) halted = true;
+                } else {
+                    // Modo riscv-tests: fallback con tohost
+                    if (regs[17] == 93) {
+                        if (memory.tohost_addr != 0)
+                            memory.storeWord(memory.tohost_addr,
+                                regs[10] == 0 ? 1 : (regs[10] << 1 | 1));
+                    }
+                    halted = true;
+                }
                 break;
+
             case 0x001:  // EBREAK
                 halted = true;
                 break;
-            case 0x302:  // MRET — retorna de excepción máquina saltando a mepc
-                // El reset_vector usa mret para saltar a test_2:
-                //   csrw mepc, t0   ← t0 apunta a test_2
-                //   mret            ← PC = mepc
+
+            case 0x302:  // MRET
                 PC = csr_mepc;
                 break;
-            // SRET, WFI y otros se ignoran silenciosamente
+
             default:
                 break;
         }
@@ -324,7 +329,7 @@ void InstructionSet::SYSTEM(uint32_t instr) {
     auto csr_read = [&](uint32_t addr) -> uint32_t {
         switch (addr) {
             case 0x300: return csr_mstatus;
-            case 0x301: return 0x40001100;  // misa: RV32I (solo lectura)
+            case 0x301: return 0x40001100;
             case 0x302: return csr_medeleg;
             case 0x303: return csr_mideleg;
             case 0x304: return csr_mie;
@@ -335,8 +340,8 @@ void InstructionSet::SYSTEM(uint32_t instr) {
             case 0x180: return csr_satp;
             case 0x3a0: return csr_pmpcfg0;
             case 0x3b0: return csr_pmpaddr0;
-            case 0xf14: return 0;           // mhartid: siempre 0 (hart único)
-            default:    return 0;           // CSR desconocido → 0
+            case 0xf14: return 0;
+            default:    return 0;
         }
     };
 
@@ -354,31 +359,19 @@ void InstructionSet::SYSTEM(uint32_t instr) {
             case 0x180: csr_satp     = val; break;
             case 0x3a0: csr_pmpcfg0  = val; break;
             case 0x3b0: csr_pmpaddr0 = val; break;
-            // misa (0x301) y mhartid (0xf14) son de solo lectura, se ignoran
             default: break;
         }
     };
-
-    // ── Operaciones CSR (CSRRW / CSRRS / CSRRC y sus variantes imm) ──────
-    //
-    // f3 & 0x4 distingue variante registro (0) de variante zimm (1):
-    //   f3 = 0x1 → CSRRW   src = regs[s1]
-    //   f3 = 0x5 → CSRRWI  src = zimm (s1 como inmediato 5 bits)
-    //   f3 = 0x2 → CSRRS   old | src
-    //   f3 = 0x6 → CSRRSI
-    //   f3 = 0x3 → CSRRC   old & ~src
-    //   f3 = 0x7 → CSRRCI
 
     uint32_t old_val = csr_read(csr_num);
     uint32_t src     = (f3 & 0x4) ? (uint32_t)s1 : regs[s1];
 
     switch (f3 & 0x3) {
-        case 0x1: csr_write(csr_num, src);             break; // CSRRW / CSRRWI
-        case 0x2: csr_write(csr_num, old_val |  src);  break; // CSRRS / CSRRSI
-        case 0x3: csr_write(csr_num, old_val & ~src);  break; // CSRRC / CSRRCI
+        case 0x1: csr_write(csr_num, src);             break;
+        case 0x2: csr_write(csr_num, old_val |  src);  break;
+        case 0x3: csr_write(csr_num, old_val & ~src);  break;
     }
 
-    // Escribir valor anterior en rd (si no es x0)
     if (dest != 0) regs[dest] = old_val;
 }
 

@@ -14,6 +14,7 @@ add_executable(rv32i-emu
     core/MMU/MMU.cpp
     core/Instructionset/Instructionset.cpp
     core/debug/DebugUI.cpp
+    core/Syscalls/Syscalls.cpp
 )
 
 # ── Includes ──────────────────────────────────────────────────────────────────
@@ -22,6 +23,7 @@ target_include_directories(rv32i-emu PRIVATE
     core/MMU
     core/Instructionset
     core/debug
+    core/Syscalls
 )
 
 # ── Linkear FTXUI ─────────────────────────────────────────────────────────────

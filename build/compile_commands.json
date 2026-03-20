@@ -1,32 +1,38 @@
 [
 {
   "directory": "/home/zero/projects/RV32I-EMU/build",
-  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/main.cpp.o -c /home/zero/projects/RV32I-EMU/main.cpp",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/main.cpp.o -c /home/zero/projects/RV32I-EMU/main.cpp",
   "file": "/home/zero/projects/RV32I-EMU/main.cpp",
   "output": "CMakeFiles/rv32i-emu.dir/main.cpp.o"
 },
 {
   "directory": "/home/zero/projects/RV32I-EMU/build",
-  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o -c /home/zero/projects/RV32I-EMU/core/CPU/CPU.cpp",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o -c /home/zero/projects/RV32I-EMU/core/CPU/CPU.cpp",
   "file": "/home/zero/projects/RV32I-EMU/core/CPU/CPU.cpp",
   "output": "CMakeFiles/rv32i-emu.dir/core/CPU/CPU.cpp.o"
 },
 {
   "directory": "/home/zero/projects/RV32I-EMU/build",
-  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o -c /home/zero/projects/RV32I-EMU/core/MMU/MMU.cpp",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o -c /home/zero/projects/RV32I-EMU/core/MMU/MMU.cpp",
   "file": "/home/zero/projects/RV32I-EMU/core/MMU/MMU.cpp",
   "output": "CMakeFiles/rv32i-emu.dir/core/MMU/MMU.cpp.o"
 },
 {
   "directory": "/home/zero/projects/RV32I-EMU/build",
-  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o -c /home/zero/projects/RV32I-EMU/core/Instructionset/Instructionset.cpp",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o -c /home/zero/projects/RV32I-EMU/core/Instructionset/Instructionset.cpp",
   "file": "/home/zero/projects/RV32I-EMU/core/Instructionset/Instructionset.cpp",
   "output": "CMakeFiles/rv32i-emu.dir/core/Instructionset/Instructionset.cpp.o"
 },
 {
   "directory": "/home/zero/projects/RV32I-EMU/build",
-  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o -c /home/zero/projects/RV32I-EMU/core/debug/DebugUI.cpp",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o -c /home/zero/projects/RV32I-EMU/core/debug/DebugUI.cpp",
   "file": "/home/zero/projects/RV32I-EMU/core/debug/DebugUI.cpp",
   "output": "CMakeFiles/rv32i-emu.dir/core/debug/DebugUI.cpp.o"
+},
+{
+  "directory": "/home/zero/projects/RV32I-EMU/build",
+  "command": "/usr/bin/g++  -I/home/zero/projects/RV32I-EMU/core/CPU -I/home/zero/projects/RV32I-EMU/core/MMU -I/home/zero/projects/RV32I-EMU/core/Instructionset -I/home/zero/projects/RV32I-EMU/core/debug -I/home/zero/projects/RV32I-EMU/core/Syscalls -g -std=gnu++17 -o CMakeFiles/rv32i-emu.dir/core/Syscalls/Syscalls.cpp.o -c /home/zero/projects/RV32I-EMU/core/Syscalls/Syscalls.cpp",
+  "file": "/home/zero/projects/RV32I-EMU/core/Syscalls/Syscalls.cpp",
+  "output": "CMakeFiles/rv32i-emu.dir/core/Syscalls/Syscalls.cpp.o"
 }
 ]

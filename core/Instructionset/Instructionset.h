@@ -4,6 +4,7 @@
 #include <array>
 #include <iostream>
 #include <iomanip>
+#include "Syscalls.h"
 
 // Forward declaration para evitar dependencia circular
 class MMU;
@@ -19,6 +20,10 @@ protected:
     MMU& memory;
     uint32_t& PC;
     bool& halted;
+        // al final de la sección protected:
+    Syscalls* syscalls_ = nullptr;  // se setea desde CPU
+
+    void setSyscalls(Syscalls* s) { syscalls_ = s; }
 
     // Constructor: recibe referencias de los miembros de CPU
     InstructionSet(std::array<uint32_t, 32>& r, MMU& m, uint32_t& pc, bool& h)
